@@ -14,26 +14,51 @@ import logging
 import dotenv
 from pathlib import Path
 from datetime import timedelta, datetime
+
+from flow.models_views.subcategories import SubCategory
 from logs import configure_logging
 
 # env
 dotenv.load_dotenv()
 SECRET_KEY_DJ = os.getenv("SECRET_KEY_DJ", "")
 DJANGO_SETTINGS_MODULE = os.getenv("DJANGO_SETTINGS_MODULE", "")
-
+# APP
 APP_PROTOCOL = os.getenv("APP_PROTOCOL", "")
 APP_HOST = os.getenv("APP_HOST", "")
 APP_PORT = os.getenv("APP_PORT", "")
 APP_HOST_REMOTE = os.getenv("APP_HOST_REMOTE", "")
 
 APP_TIME_ZONE = os.getenv("APP_TIME_ZONE", "")
+
+# DB
 DATABASE_ENGINE_LOCAL = os.getenv("DATABASE_ENGINE_LOCAL", "")
 DATABASE_LOCAL = os.getenv("DATABASE_LOCAL", "")
 
+# JWT
 JWT_ACCESS_TOKEN_LIFETIME_MINUTES = os.getenv("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", "")
 JWT_REFRESH_TOKEN_LIFETIME_DAYS = os.getenv("JWT_REFRESH_TOKEN_LIFETIME_DAYS", "")
 
+# FLOW
+STATUS_OF_FLOW = [
+    ("BUSINESS", "Commercial flow"),
+    ("PRIVATE", "Private flow"),
+    ("TAX", "Tax flow"),
+]
 
+TYPE_OF_FLOW = [
+    ("REPLENISHMENT", "Replenishment bank account"),
+    ("WRITE-AFF", "Write-off of money")
+]
+
+CATEGORY = [
+    ("MARKETIRNG","Маркетинг"),
+    ("INFRASTRUCTURE", "Инфраструктура")
+]
+
+SUBCATEGORY = [
+    ("VPS", "VPS"),
+    ("PROXY", "Proxy")
+]
 # log
 log = logging.getLogger(__name__)
 configure_logging(logging.INFO)
@@ -207,7 +232,7 @@ STATIC_URL = '/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = "django.db.models_views.BigAutoField"
 DEFAULT_CHARSET = "utf-8"
 AUTH_USER_MODEL = "person.UserModel"
 

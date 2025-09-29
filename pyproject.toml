@@ -45,6 +45,7 @@ drf-yasg = "^1.21.10"
 model-bakery = "^1.20.5"
 black = "^25.1.0"
 watchfiles = "^1.1.0"
+bandit = "^1.8.6"
 
 
 
