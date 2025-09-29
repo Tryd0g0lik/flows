@@ -16,8 +16,43 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include, re_path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework.permissions import AllowAny
+from django.conf.urls.static import static
+from django.views.generic import TemplateView
+from project import settings
+from project.urls_api import urlpatterns as api_urls
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="API for test code",
+        description="API for test code",
+        default_version="1.0.0",
+        service_identity=False,
+        contact=openapi.Contact(email="work80@mail.ru"),
+    ),
+    public=True,
+    permission_classes=[AllowAny],
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/", include((api_urls, "api_keys"), namespace="api_keys")),
+    path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="swagger"),
+    path(
+        "swagger<format>/",
+        schema_view.without_ui(cache_timeout=0),
+        name="swagger-format",
+    ),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="redoc"),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += [
+    re_path(
+        r"^(?!static/|media/|api/|admin/|redoc/|swagger/).*",
+        TemplateView.as_view(template_name="index.html"),
+    ),
 ]
+
