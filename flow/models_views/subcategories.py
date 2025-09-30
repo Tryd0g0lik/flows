@@ -26,8 +26,8 @@ class SubCategory(InitialModel):
     )
     name = models.CharField(
         max_length=100,
-        choices=SUBCATEGORY,
-        default=SUBCATEGORY[0][0],
+        # choices=SUBCATEGORY,
+        # default=SUBCATEGORY[0][0],
         help_text="100 is MAX length of sub-category name.",
         verbose_name=_("Subcategory name"),
         unique=True,

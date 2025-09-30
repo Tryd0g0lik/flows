@@ -45,7 +45,7 @@ class ContentFlowsModel(models.Model):
     )
     money = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MinValueValidator(300000)],
-        help_text=_("MIN sum from 1 before 300000"),
+        help_text=_("Sum from 1 before 300000"),
     )
     comment = models.CharField(
         max_length=100,
@@ -54,7 +54,7 @@ class ContentFlowsModel(models.Model):
         validators=[
             MaxLengthValidator(100),
             RegexValidator(
-                regex="(^[A-Za-z][\w_ \.,]{1,150}$)",
+                regex="(^[A-Za-z][A-Za-z_ .,]{1,150}$)",
             ),
         ],
     )

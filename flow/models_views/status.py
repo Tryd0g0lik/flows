@@ -14,8 +14,8 @@ from project.settings import STATUS_OF_FLOW
 class StatusModel(models.Model):
     name = models.CharField(
         max_length=50,
-        choices=STATUS_OF_FLOW,
-        default=STATUS_OF_FLOW[0][0],
+        # choices=STATUS_OF_FLOW,
+        # default=STATUS_OF_FLOW[0][0],
         help_text="50 is MAX length of name.",
         verbose_name=_("Status name"),
         unique=True,

@@ -13,13 +13,12 @@ from project.settings import CATEGORY
 class CategoryModel(InitialModel):
     """
     This is model of categories
-    TODO: добавить привязку подкатегории
     """
 
     name = models.CharField(
         max_length=50,
-        choices=CATEGORY,
-        default=CATEGORY[0][0],
+        # choices=CATEGORY,
+        # default=CATEGORY[0][0],
         help_text="50 is MAX length of category name.",
         verbose_name=_("Category name"),
         unique=True,

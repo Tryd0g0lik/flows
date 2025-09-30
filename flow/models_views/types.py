@@ -21,8 +21,8 @@ class TypeFlowModel(models.Model):
     )
     name = models.CharField(
         max_length=50,
-        choices=TYPE_OF_FLOW,
-        default=TYPE_OF_FLOW[0][0],
+        # choices=TYPE_OF_FLOW,
+        # default=TYPE_OF_FLOW[0][0],
         help_text="50 is MAX length of name.",
         verbose_name=_("Name of type"),
         unique=True,
