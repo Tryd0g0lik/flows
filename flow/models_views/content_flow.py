@@ -31,7 +31,7 @@ class ContentFlowsModel(InitialModel):
         help_text=_("Select status name"),
     )
     money = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MinValueValidator(300000)],
+        validators=[MinValueValidator(1), ],
         help_text=_("Sum from 1 before 300000"),
     )
     comment = models.CharField(

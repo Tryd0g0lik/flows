@@ -22,29 +22,24 @@ class TypeFlowModel(InitialModel):
         verbose_name=_("Name of type"),
         validators=[
             validators.RegexValidator(
-                regex="(^[A-Za-z][A-Za-z0-9_]{1,50}$)",
+                regex="(^[A-Za-z][A-Za-z0-9-_]{1,50}$)",
                 message="Check valid a name.",
             ),
             validators.MaxLengthValidator(50),
         ],
     )
-    # category_id = models.ForeignKey(
-    #     CategorySubcategory,
-    #     on_delete=models.CASCADE,
-    #     related_name="categoryname",
-    #     verbose_name=_("Category"),
-    # )
-    category_id = models.ForeignKey(
-        CategoryModel, on_delete=models.CASCADE, related_name="Category"
-    )
-    # subcategory_id = models.ForeignKey(
-    #     "SubCategory", on_delete=models.CASCADE, related_name="Category"
-    # )
+
+    category = models.ForeignKey(
+            CategoryModel, on_delete=models.CASCADE, verbose_name=_("Category"),
+        )
+
+
 
     class Meta:
+        # db_table = "flow_categorymodel_subcategories"
         verbose_name = _("Type")
         verbose_name_plural = _("Types")
-        unique_together = ["name", "category_id"]
+        unique_together = ["name", "category"]
         ordering = ["name"]
 
     def __str__(self):
