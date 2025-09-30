@@ -24,6 +24,7 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from project import settings
 from project.urls_api import urlpatterns as api_urls
+from flow.urls import urlpatterns as flow_urls
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -39,6 +40,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include(flow_urls)),
     path("api/", include((api_urls, "api_keys"), namespace="api_keys")),
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="swagger"),
     path(
@@ -55,4 +57,3 @@ urlpatterns += [
         TemplateView.as_view(template_name="index.html"),
     ),
 ]
-

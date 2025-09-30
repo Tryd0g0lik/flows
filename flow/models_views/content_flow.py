@@ -5,16 +5,14 @@ models_views/content_flow.py
 from django.core.validators import MinValueValidator, MaxLengthValidator, RegexValidator
 from django.db import models
 
-# Create your models_views here.
-
 from django.utils.translation import gettext_lazy as _
 
-from flow.models_views.categories import CategoryModel
+from flow.models import InitialModel
 from flow.models_views.status import StatusModel
 from flow.models_views.types import TypeFlowModel
 
 
-class ContentFlowsModel(models.Model):
+class ContentFlowsModel(InitialModel):
     """
     This is model for basic of flow's lines
     """
@@ -24,17 +22,6 @@ class ContentFlowsModel(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("Type"),
         help_text=_("Select type name"),
-    )
-    category_id = models.ForeignKey(
-        CategoryModel,
-        on_delete=models.CASCADE,
-        verbose_name=_("Category"),
-        help_text=_("Select category name"),
-    )
-    subcategory_id = models.ForeignKey(
-        on_delete=models.CASCADE,
-        verbose_name=_("Subcategory"),
-        help_text=_("Select subcategory name"),
     )
 
     status_id = models.ForeignKey(
@@ -64,3 +51,11 @@ class ContentFlowsModel(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True,
     )
+
+    class Meta:
+        verbose_name = _("Flow")
+        verbose_name_plural = _("Flow")
+        unique_together = ["slug"]
+
+    def get_absolute_url(self):
+        return f"/flow/{self.pk}/"

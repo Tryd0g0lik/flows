@@ -15,7 +15,7 @@ import dotenv
 from pathlib import Path
 from datetime import timedelta, datetime
 
-from flow.models_views.subcategories import SubCategory
+# from flow.models_views.subcategories import SubCategory
 from logs import configure_logging
 
 # env
@@ -57,7 +57,9 @@ CATEGORY = [
 
 SUBCATEGORY = [
     ("VPS", "VPS"),
-    ("PROXY", "Proxy")
+    ("PROXY", "Proxy"),
+    ("FARPOST", "Farpost"),
+    ("AVITO", "Avito")
 ]
 # log
 log = logging.getLogger(__name__)
@@ -232,7 +234,7 @@ STATIC_URL = '/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models_views.BigAutoField"
+# DEFAULT_AUTO_FIELD = "django.db.models_views.BigAutoField"
 DEFAULT_CHARSET = "utf-8"
 AUTH_USER_MODEL = "person.UserModel"
 

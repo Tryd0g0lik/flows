@@ -2,5 +2,6 @@ from django.apps import AppConfig
 
 
 class FlowConfig(AppConfig):
-    default_auto_field = "django.db.models_views.BigAutoField"
+    # "django.db.models_views.BigAutoField"
+    default_auto_field = "django.db.models.BigAutoField"
     name = "flow"
