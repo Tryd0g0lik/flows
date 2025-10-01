@@ -13,7 +13,6 @@ from flow.flow_api.views_api import (
     TypeView,
 )
 
-# from flow.flow_api.views_api import PageDetailView
 
 router = routers.DefaultRouter()
 router.register(r"flow", FlowView, basename="flows")

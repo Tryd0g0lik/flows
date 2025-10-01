@@ -1,4 +1,3 @@
-from typing import Union
 from adrf import serializers
 
 from flow.models_views.categories import CategoryModel

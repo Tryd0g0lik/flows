@@ -15,8 +15,6 @@ import dotenv
 from pathlib import Path
 from datetime import timedelta, datetime
 
-# from flow.models_views.subcategories import SubCategory
-
 
 # env
 dotenv.load_dotenv()
@@ -30,9 +28,16 @@ APP_HOST_REMOTE = os.getenv("APP_HOST_REMOTE", "")
 
 APP_TIME_ZONE = os.getenv("APP_TIME_ZONE", "")
 
-# DB
+# DB LOCAL
 DATABASE_ENGINE_LOCAL = os.getenv("DATABASE_ENGINE_LOCAL", "")
 DATABASE_LOCAL = os.getenv("DATABASE_LOCAL", "")
+# DB REMOTE
+DB_ENGINE = os.getenv("DB_ENGINE", "")
+POSTGRES_DB = os.getenv("POSTGRES_DB", "")
+POSTGRES_USER = os.getenv("POSTGRES_USER", "")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT", "")
 
 # JWT
 JWT_ACCESS_TOKEN_LIFETIME_MINUTES = os.getenv("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", "")
@@ -164,19 +169,19 @@ ASGI_APPLICATION = "project.asgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR /  f"{DATABASE_LOCAL}",
-    },
     # "default": {
-    #     'ENGINE': f'{DB_ENGINE}',
-    #     'NAME': f'{POSTGRES_DB}',
-    #     'USER': f'{POSTGRES_USER}',
-    #     'PASSWORD': f"{POSTGRES_PASSWORD}",
-    #     'HOST': f'{POSTGRES_HOST}',
-    #     'PORT': f'{POSTGRES_PORT}',
-    #     "KEY_PREFIX": "drive_",  # it's my prefix for the keys
-    # }
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR /  f"{DATABASE_LOCAL}",
+    # },
+    "default": {
+        'ENGINE': f'{DB_ENGINE}',
+        'NAME': f'{POSTGRES_DB}',
+        'USER': f'{POSTGRES_USER}',
+        'PASSWORD': f"{POSTGRES_PASSWORD}",
+        'HOST': f'{POSTGRES_HOST}',
+        'PORT': f'{POSTGRES_PORT}',
+        "KEY_PREFIX": "drive_",  # it's my prefix for the keys
+    }
 }
 
 
@@ -302,6 +307,31 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes = int(JWT_ACCESS_TOKEN_LIFETIME_MINUTES)),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=int(JWT_REFRESH_TOKEN_LIFETIME_DAYS)),
     "SIGNING_KEY": SECRET_KEY,
+}
+
+
+# '''WEBPACK_LOADER'''
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "CACHE": not DEBUG,
+        # 'BUNDLE_DIR_NAME': '..\\frontend\\src\\bundles',
+        "BUNDLE_DIR_NAME": "static",
+        "STATS_FILE": os.path.join(
+            BASE_DIR, "bundles/webpack-stats.json"
+        ),
+
+        "POLL_INTERVAL": 0.1,
+        "TIMEOUT": None,
+        "TEST": {
+            # "NAME": "test_cloud",
+        },
+        "IGNORE": [
+            # '.+\.map$'
+            r".+\.hot-update.js",
+            r".+\.map",
+        ],
+        "LOADER_CLASS": "webpack_loader.loader.WebpackLoader",
+    }
 }
 
 # '''lOGGING'''
