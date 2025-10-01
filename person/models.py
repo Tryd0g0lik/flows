@@ -3,4 +3,4 @@ from django.contrib.auth.models import AbstractUser
 
 
 class UserModel(AbstractUser):
-    pass
+    id = models.BigAutoField(primary_key=True)

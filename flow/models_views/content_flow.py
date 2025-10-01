@@ -2,6 +2,8 @@
 models_views/content_flow.py
 """
 
+from datetime import datetime
+
 from django.core.validators import MinValueValidator, MaxLengthValidator, RegexValidator
 from django.db import models
 
@@ -49,7 +51,7 @@ class ContentFlowsModel(InitialModel):
         ],
     )
     created_at = models.DateTimeField(
-        auto_now_add=True,
+        default=datetime.now, verbose_name=_("Date of creation"), null=True, blank=True
     )
     updated_at = models.DateTimeField(
         auto_now=True,
