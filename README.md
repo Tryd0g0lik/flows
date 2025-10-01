@@ -1,6 +1,22 @@
 WT
 https://docs.google.com/document/d/1q0a99in7kGfNr3ykHAgWVUMFmK0DmA9-F2T2hqBLBos/edit?tab=t.0
 
+# APP
+- Статус "`flow/models_views/status.py`"; 
+- Тип "`flow/models_views/types.py`"; 
+- **Категория и подкатегория**:
+  - "`flow/models_views/categories.py`";
+  - "`flow/models_views/subcategories.py`".
+
+- Комментарий & Сумма & Дата создания и Дата обновления записи:
+  - "`flow/models_views/content_flow.py`".
+  
+
+>>Пользователь не может выбрать подкатегорию, если она не связана с выбранной категорией.
+
+Создаём *подкатегорию*, затем создаём *категорию* и закрепляем *подкатегории*. 
+
+
 ----
 ### Commands
 
@@ -39,6 +55,8 @@ File "`project/settings.py`" have a basis option plus:
 ![Category](img/category.png)\
 Где можно выбрать  N-ое количество под-категорий на одну категорию.
 
+
+
 # Subcategories
 ![Category](img/subcategories.png)
 
@@ -59,5 +77,11 @@ File "`project/settings.py`" have a basis option plus:
 |![filter](img/filter1.png) | ![filter](img/filter2.png)   |
 
 
-# Search
+## Search
 ![Search](img/search.png) 
+
+
+## swagger
+![swagger](img/swagger.png)
+### Redoc
+![swagger](img/redoc.png)

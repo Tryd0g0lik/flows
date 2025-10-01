@@ -10,13 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
-import logging
+
 import dotenv
 from pathlib import Path
 from datetime import timedelta, datetime
 
 # from flow.models_views.subcategories import SubCategory
-from logs import configure_logging
+
 
 # env
 dotenv.load_dotenv()
@@ -61,9 +61,7 @@ SUBCATEGORY = [
     ("FARPOST", "Farpost"),
     ("AVITO", "Avito")
 ]
-# log
-log = logging.getLogger(__name__)
-configure_logging(logging.INFO)
+
 
 
 
