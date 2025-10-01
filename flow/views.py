@@ -7,4 +7,4 @@ from flow.models_views.types import TypeFlowModel
 
 def main(request):
     types = TypeFlowModel.objects.all()
-    return render(request, "flow/index.html", {"types": types})
+    return render(request, "index.html", {"types": types})
