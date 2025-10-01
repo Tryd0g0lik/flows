@@ -39,9 +39,6 @@ POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "")
 POSTGRES_PORT = os.getenv("POSTGRES_PORT", "")
 
-# JWT
-JWT_ACCESS_TOKEN_LIFETIME_MINUTES = os.getenv("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", "")
-JWT_REFRESH_TOKEN_LIFETIME_DAYS = os.getenv("JWT_REFRESH_TOKEN_LIFETIME_DAYS", "")
 
 # FLOW
 STATUS_OF_FLOW = [
@@ -296,17 +293,10 @@ CORS_ALLOW_HEADERS = [
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/stateless_user_authentication.html
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication',
         'rest_framework.authentication.SessionAuthentication',  # This for works with sessions
         'rest_framework.authentication.TokenAuthentication',   # Options for API
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes = int(JWT_ACCESS_TOKEN_LIFETIME_MINUTES)),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(JWT_REFRESH_TOKEN_LIFETIME_DAYS)),
-    "SIGNING_KEY": SECRET_KEY,
 }
 
 
