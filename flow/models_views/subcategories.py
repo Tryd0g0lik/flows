@@ -11,10 +11,6 @@ from django.utils.translation import gettext_lazy as _
 from flow.models import InitialModel
 
 
-# from flow.models_views.categories import CategoryModel
-# from project.settings import SUBCATEGORY
-
-
 class SubCategory(InitialModel):
     """
     This is model of sub categories

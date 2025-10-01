@@ -29,3 +29,35 @@ File "`project/settings.py`" have a basis option plus:
 - "`Logging`" Tah is conf for logs. From root of project we can see the file "`logs.py`". It contains the template for loging; 
 - "`swagger`".
 - "`CONTENT_TYPES_CHOICES`"
+
+
+## Admin
+![admin](img/admin.png)
+
+## Category
+
+![Category](img/category.png)\
+Где можно выбрать  N-ое количество под-категорий на одну категорию.
+
+# Subcategories
+![Category](img/subcategories.png)
+
+## Status
+![Category](img/statuses.png)
+
+## Type
+![Category](img/type.png)
+
+## Data Flow
+![Category](img/flow.png) \
+![Categor](img/flow_content.png) 
+
+## Filter
+
+||                              |
+|:----|:-----------------------------|
+|![filter](img/filter1.png) | ![filter](img/filter2.png)   |
+
+
+# Search
+![Search](img/search.png) 

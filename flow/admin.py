@@ -9,6 +9,7 @@ from flow.models_views.status import StatusModel
 from flow.models_views.subcategories import SubCategory
 from flow.models_views.types import TypeFlowModel
 
+
 class TitleFilter(SimpleListFilter):
     title = "Заголовок начинается с:"
     parameter_name = "title_start"
@@ -79,11 +80,7 @@ class SubCategoryInLine(BasicInline):
 
 
 class CategoryModelInLine(BasicInline):
-    fields = [
-        "id",
-        "name",
-        "subcategories"
-    ]
+    fields = ["id", "name", "subcategories"]
 
 
 @admin.register(TypeFlowModel)
@@ -110,18 +107,22 @@ class StatusAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     ordering = ["name"]
 
+
 class ProductAdminForm(forms.ModelForm):
     class Meta:
         model = CategoryModel
-        fields = '__all__'
+        fields = "__all__"
         widgets = {
-            'categories': forms.SelectMultiple(attrs={'size': '10'}),
+            "categories": forms.SelectMultiple(attrs={"size": "10"}),
         }
+
 
 @admin.register(CategoryModel)
 class CategoryAdmin(admin.ModelAdmin):
     form = ProductAdminForm
-    list_filter = [TitleFilter,]
+    list_filter = [
+        TitleFilter,
+    ]
     exclude = ["id"]
     search_fields = ["name"]
     ordering = ["name"]
@@ -137,13 +138,12 @@ class SubCategoryAdmin(admin.ModelAdmin):
     def categories_count(self, obj):
         return obj.categories.count()
 
-    categories_count.short_description = 'Кол-во категорий'
+    categories_count.short_description = "Кол-во категорий"
 
 
 @admin.register(ContentFlowsModel)
 class ContentFlowsAdmin(admin.ModelAdmin):
     list_display = [
-
         "type_id",
         "status_id",
         "money",
@@ -152,7 +152,6 @@ class ContentFlowsAdmin(admin.ModelAdmin):
     ]
 
     list_filter = [
-        TitleFilter,
         "money",
         "created_at",
         "updated_at",

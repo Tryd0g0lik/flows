@@ -31,13 +31,16 @@ class ContentFlowsModel(InitialModel):
         help_text=_("Select status name"),
     )
     money = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), ],
+        validators=[
+            MinValueValidator(1),
+        ],
         help_text=_("Sum from 1 before 300000"),
     )
     comment = models.CharField(
         max_length=100,
         null=True,
         blank=True,
+        verbose_name=_("Sum of money"),
         validators=[
             MaxLengthValidator(100),
             RegexValidator(
