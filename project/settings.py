@@ -83,9 +83,8 @@ if not SECRET_KEY:
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
     f'{APP_HOST_REMOTE}',
-    '0.0.0.0',
+    '127.0.0.1',
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
@@ -229,7 +228,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,  "static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR,  "collectstatic/")
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -249,18 +248,16 @@ SESSION_COOKIE_AGE = 86400
 CORS_ORIGIN_ALLOW_ALL = True
 # Here, we allow the URL list for publicated
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",
     f"http://{APP_HOST_REMOTE}:8000",
-    "http://0.0.0.0:8000",
+    "http://127.0.0.1:8000",
 ]
 
 # https://github.com/adamchainz/django-cors-headers?tab=readme-ov-file#csrf-integration
 # https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-CSRF_TRUSTED_ORIGINS
 # This is list from private of URL
 CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:8000",
     f"http://{APP_HOST_REMOTE}:8000",
-    "http://0.0.0.0:8000",
+    "http://127.0.0.1:8000",
     ]
 # Allow the cookie in HTTP request.
 CORS_ALLOW_CREDENTIALS = True

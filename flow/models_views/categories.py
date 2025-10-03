@@ -10,9 +10,13 @@ from django.utils.translation import gettext_lazy as _
 from flow.models import InitialModel
 from flow.models_views.subcategories import SubCategory
 
+
 class CategoryModel(InitialModel):
     """
     This is model of categories
+    TODO Модель SUB-Категория имеет колонку 'active' По умолчанию False.
+        Заполняя  категорю, выбираем sub-категории. При сохранении, в SUB категории
+        актиировая колонку 'active' из выбраныый позиций
     """
 
     slug = models.SlugField(unique=True, help_text=_("Unique identifier for URLs"))
@@ -29,11 +33,8 @@ class CategoryModel(InitialModel):
         ],
     )
     subcategories = models.ManyToManyField(
-        SubCategory,
-        related_name='categories',
-        verbose_name='categories'
+        SubCategory, related_name="categories", verbose_name="categories"
     )
-
 
     class Meta:
         verbose_name = _("Category")
@@ -53,4 +54,3 @@ class CategoryModel(InitialModel):
         self.name = self.name.upper()
         self.slug = self.slug.lower()
         super().save(*args, **kwargs)
-
