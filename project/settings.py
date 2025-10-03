@@ -165,19 +165,19 @@ ASGI_APPLICATION = "project.asgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR /  f"{DATABASE_LOCAL}",
-    # },
     "default": {
-        'ENGINE': f'{DB_ENGINE}',
-        'NAME': f'{POSTGRES_DB}',
-        'USER': f'{POSTGRES_USER}',
-        'PASSWORD': f"{POSTGRES_PASSWORD}",
-        'HOST': f'{POSTGRES_HOST}',
-        'PORT': f'{POSTGRES_PORT}',
-        "KEY_PREFIX": "drive_",  # it's my prefix for the keys
-    }
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR /  f"{DATABASE_LOCAL}",
+    },
+    # "default": {
+    #     'ENGINE': f'{DB_ENGINE}',
+    #     'NAME': f'{POSTGRES_DB}',
+    #     'USER': f'{POSTGRES_USER}',
+    #     'PASSWORD': f"{POSTGRES_PASSWORD}",
+    #     'HOST': f'{POSTGRES_HOST}',
+    #     'PORT': f'{POSTGRES_PORT}',
+    #     "KEY_PREFIX": "drive_",  # it's my prefix for the keys
+    # }
 }
 
 
