@@ -2,12 +2,9 @@
 models_views/categories.py
 """
 
-from django.db import models
-
-# Create your models_views here.
-from django.core import validators
-from django.core import validators
 from django.utils.translation import gettext_lazy as _
+
+from django.db import models
 
 
 class InitialModel(models.Model):

@@ -12,9 +12,6 @@ from flow.models import InitialModel
 from flow.models_views.categories import CategoryModel
 
 
-# from flow.models_views.categories import CategorySubcategory
-
-
 class TypeFlowModel(InitialModel):
     name = models.CharField(
         max_length=50,
@@ -30,10 +27,10 @@ class TypeFlowModel(InitialModel):
     )
 
     category = models.ForeignKey(
-            CategoryModel, on_delete=models.CASCADE, verbose_name=_("Category"),
-        )
-
-
+        CategoryModel,
+        on_delete=models.CASCADE,
+        verbose_name=_("Category"),
+    )
 
     class Meta:
         # db_table = "flow_categorymodel_subcategories"

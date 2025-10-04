@@ -102,6 +102,20 @@ if DEBUG:
 
 INSTALLED_APPS = [
     "daphne",
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.contrib.settings',
+    'wagtail',
+    'taggit',
+    'modelcluster',
     'rest_framework',
     'drf_spectacular',
     'corsheaders',
@@ -120,6 +134,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
     "django.middleware.security.SecurityMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -130,13 +145,24 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
 ]
+# WAGTAIL
+WAGTAIL_SITE_NAME = 'FLOWS'
+# Replace the search backend
+WAGTAILSEARCH_BACKENDS = {
+ 'default': {
+   'BACKEND': 'wagtail.search.backends.elasticsearch8',
+   'INDEX': 'myapp'
+ }
+}
 
 # '''WHITEnOISE'''
 # for a static files in production
 # https://whitenoise.readthedocs.io/en/stable/django.html
 WHITENOISE_MAX_AGE = 31536000  # static cache by 1 year
 WHITENOISE_USE_FINDERS = True
+WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
 
 ROOT_URLCONF = "project.urls"
 
@@ -167,7 +193,7 @@ ASGI_APPLICATION = "project.asgi.application"
 DATABASES = {
     # "default": {
     #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR /  f"{DATABASE_LOCAL}",
+    #     "NAME": BASE_DIR /  "truckdriver_db.sqlite3",
     # },
     "default": {
         'ENGINE': f'{DB_ENGINE}',
@@ -221,15 +247,25 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+DATE_FORMAT = 'd.m.Y'
+DATETIME_FORMAT = 'd.m.Y H:i'
+USE_L10N = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,  "static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR,  "collectstatic/")
 STATIC_URL = 'static/'
 
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

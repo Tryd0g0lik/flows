@@ -52,6 +52,3 @@ class SubСategoryView(viewsets.ModelViewSet):
 class TypeView(viewsets.ModelViewSet):
     queryset = TypeFlowModel.objects.all()
     serializer_class = TypeFlowSerializer
-
-
-#
