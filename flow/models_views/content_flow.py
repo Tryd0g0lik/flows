@@ -50,10 +50,10 @@ class ContentFlowsModel(InitialModel):
             ),
         ],
     )
-    created_at = models.DateTimeField(
+    created_at = models.DateField(
         default=datetime.now, verbose_name=_("Date of creation"), null=True, blank=True
     )
-    updated_at = models.DateTimeField(
+    updated_at = models.DateField(
         auto_now=True,
     )
 

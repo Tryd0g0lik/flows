@@ -1,13 +1,68 @@
-from datetime import datetime
-from django.contrib import admin
+"""
+flow/admin.py
+https://docs.wagtail.org/en/stable/reference/viewsets.html#wagtail.admin.viewsets.model.ModelViewSet.list_filter
+"""
 
-from admins.filters import TitleFilter
-from admins.forms import ProductAdminForm, ContentFlowsModelForm
+from datetime import datetime
+from time import localtime
+from django.contrib import admin
+from django.utils.formats import date_format
+from wagtail.admin.ui.tables import BaseColumn
+
+from wagtail.snippets.models import register_snippet
+from wagtail.snippets.views.snippets import SnippetViewSet
+from wagtail.admin.ui.tables import UpdatedAtColumn
+
+from admins.filters import (
+    FlowFilterSet,
+    СategoryFilterSet,
+    StatusFilterSet,
+    SubСategoryFilterSet,
+    TypeFilterSet,
+)
+
 from flow.models_views.categories import CategoryModel
+
 from flow.models_views.content_flow import ContentFlowsModel
+
+
 from flow.models_views.status import StatusModel
 from flow.models_views.subcategories import SubCategory
 from flow.models_views.types import TypeFlowModel
+
+
+class CustomCreatedAtColumn(BaseColumn):
+    def __init__(self, *args, **kwargs):
+        kwargs["sort_key"] = "created_at"  # Указываем поле для сортировки
+        super().__init__("created_at", *args, **kwargs)
+
+    def get_value(self, instance):
+        return instance.created_at
+
+    def render_value(self, instance, parent_context):
+        created_at = self.get_value(instance)
+        if created_at:
+            return date_format(
+                localtime(created_at), format="DATETIME_FORMAT", use_l10n=True
+            )
+        return ""
+
+
+class CustomUpdatedAtColumn(BaseColumn):
+    def __init__(self, *args, **kwargs):
+        kwargs["sort_key"] = "updated_at"  # Указываем поле для сортировки
+        super().__init__(*args, **kwargs)
+
+    def get_value(self, instance):
+        return instance.updated_at
+
+    def render_value(self, instance, parent_context):
+        updated_at = self.get_value(instance)
+        if updated_at:
+            return date_format(
+                localtime(updated_at), format="DATETIME_FORMAT", use_l10n=True
+            )
+        return ""
 
 
 class BasicInline(admin.StackedInline):
@@ -16,95 +71,85 @@ class BasicInline(admin.StackedInline):
     fields = "__all__"
 
 
-@admin.register(TypeFlowModel)
-class TypeAdmin(admin.ModelAdmin):
+# class TypeAdmin(admin.ModelAdmin):
+@register_snippet
+class TypeAdmin(SnippetViewSet):
+    model = TypeFlowModel
     list_display = [
         "id",
         "name",
         "category",
     ]
-    list_filter = [TitleFilter, "name"]
+    list_filter = ["id", "name", CustomCreatedAtColumn(label="created_at")]
     search_fields = ["name"]
     ordering = ["name"]
-
-
-@admin.register(StatusModel)
-class StatusAdmin(admin.ModelAdmin):
-    list_display = [
-        "id",
-        "name",
-    ]
-    list_filter = [
-        TitleFilter,
-    ]
-    search_fields = ["name"]
-    ordering = ["name"]
-
-
-@admin.register(CategoryModel)
-class CategoryAdmin(admin.ModelAdmin):
-    form = ProductAdminForm
-    list_filter = [
-        TitleFilter,
-    ]
-    exclude = ["id"]
-    search_fields = ["name"]
-    ordering = ["name"]
-
-
-@admin.register(SubCategory)
-class SubCategoryAdmin(admin.ModelAdmin):
-    exclude = ["id"]
-    list_filter = [TitleFilter, "name"]
-    search_fields = ["name"]
-    ordering = ["name"]
+    list_per_page = 25
+    filterset_class = TypeFilterSet
+    base_url_path = "internal/type"
 
     def categories_count(self, obj):
         return obj.categories.count()
 
-    categories_count.short_description = "Кол-во категорий"
+
+@register_snippet
+class StatusAdmin(SnippetViewSet):
+    model = StatusModel
+    list_display = ["id", "name", UpdatedAtColumn()]
+    list_filter = [
+        "name",
+    ]
+    search_fields = ["name"]
+    ordering = ["name"]
+    list_per_page = 25
+    base_url_path = "internal/status"
+    filterset_class = StatusFilterSet
 
 
-@admin.register(ContentFlowsModel)
-class ContentFlowsAdmin(admin.ModelAdmin):
-    form = ContentFlowsModelForm
+@register_snippet
+class CategoryAdmin(SnippetViewSet):
+    model = CategoryModel
+    list_display = ["name", "slug", UpdatedAtColumn()]
+    search_fields = [
+        "name",
+    ]
+    ordering = ["name"]
+    list_per_page = 25
+    base_url_path = "internal/category"
+    filterset_class = СategoryFilterSet
+
+
+@register_snippet
+class SubCategoryAdmin(SnippetViewSet):
+    model = SubCategory
+    exclude = ["id"]
+    search_fields = ["name"]
+    ordering = ["name"]
+    list_display = ["name", UpdatedAtColumn()]
+    list_per_page = 25
+    admin_url_namespace = "SubCategory_views"
+    base_url_path = "internal/member"
+    filterset_class = SubСategoryFilterSet
+
+
+@register_snippet
+class ContentFlowsAdmin(SnippetViewSet):
+    model = ContentFlowsModel
     list_display = [
         "type_id",
         "status_id",
         "money",
-        "formatted_created_at",
-        "updated_at",
-    ]
-    readonly_fields = ["updated_at"]
-    list_filter = [
-        "type_id",
-        "status_id",
         "created_at",
         "updated_at",
+        UpdatedAtColumn(),
+        "slug",
     ]
+    readonly_fields = ["updated_at"]
+    search_fields = ["money"]
     inlines = []
-    ordering = [
-        "money",
-    ]
-    empty_value_display = "-empty-"
-    fieldsets = [
-        (
-            None,
-            {
-                "fields": [
-                    "slug",
-                    (
-                        "created_at",
-                        "updated_at",
-                    ),
-                    ("type_id", "status_id"),
-                    "money",
-                    "comment",
-                ],
-            },
-        ),
-        ("Системная информация", {"fields": [], "classes": ["collapse"]}),
-    ]
+    list_per_page = 25
+    filterset_class = FlowFilterSet
+
+    base_url_path = "internal/flow"
 
     def save_model(self, request, obj, form, change):
         form_created_at = form.cleaned_data.get("created_at")
@@ -117,9 +162,3 @@ class ContentFlowsAdmin(admin.ModelAdmin):
             else:
                 obj.created_at = datetime.now()
         super().save_model(request, obj, form, change)
-
-    def formatted_created_at(self, obj):
-        return obj.created_at.strftime("%d.%m.%Y %H:%M") if obj.created_at else "-"
-
-    formatted_created_at.short_description = "Создан"
-    formatted_created_at.admin_order_field = "created_at"
