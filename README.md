@@ -46,11 +46,18 @@ File "`project/settings.py`" have a basis option plus:
 - "`swagger`".
 - "`CONTENT_TYPES_CHOICES`"
 
+----
+## URL локальный
+* "`admin/`";
+* "`swagger/`";
+* "`redoc/`";
+* "`swagger<format>/`".
 
-## Admin
+## Админ-панель
+### Admin
 ![admin](img/admin.png)
 
-## Category
+### Category
 
 ![Category](img/category.png)\
 Где можно выбрать  N-ое количество под-категорий на одну категорию.
@@ -60,28 +67,28 @@ File "`project/settings.py`" have a basis option plus:
 # Subcategories
 ![Category](img/subcategories.png)
 
-## Status
+### Status
 ![Category](img/statuses.png)
 
-## Type
+### Type
 ![Category](img/type.png)
 
-## Data Flow
+### Data Flow
 ![Category](img/flow.png) \
 ![Categor](img/flow_content.png) 
 
-## Filter
+### Filter
 
 ||                              |
 |:----|:-----------------------------|
 |![filter](img/filter1.png) | ![filter](img/filter2.png)   |
 
 
-## Search
+### Search
 ![Search](img/search.png) 
 
 
-## swagger
+### swagger
 ![swagger](img/swagger.png)
-### Redoc
+#### Redoc
 ![swagger](img/redoc.png)

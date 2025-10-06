@@ -29,6 +29,9 @@ class SubCategory(InitialModel):
             validators.MaxLengthValidator(100),
         ],
     )
+    active = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         verbose_name = _("Subcategory")

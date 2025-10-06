@@ -39,9 +39,6 @@ POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "")
 POSTGRES_PORT = os.getenv("POSTGRES_PORT", "")
 
-# JWT
-JWT_ACCESS_TOKEN_LIFETIME_MINUTES = os.getenv("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", "")
-JWT_REFRESH_TOKEN_LIFETIME_DAYS = os.getenv("JWT_REFRESH_TOKEN_LIFETIME_DAYS", "")
 
 # FLOW
 STATUS_OF_FLOW = [
@@ -83,14 +80,28 @@ if not SECRET_KEY:
     raise ValueError("SECRET_KEY must be set in environment variables")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
     f'{APP_HOST_REMOTE}',
-    '0.0.0.0',
+    '127.0.0.1',
 ]
 
+# DATABASE
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+DATABASES = {
+    "default": {
+        'ENGINE': f'{DB_ENGINE}',
+        'NAME': f'{POSTGRES_DB}',
+        'USER': f'{POSTGRES_USER}',
+        'PASSWORD': f"{POSTGRES_PASSWORD}",
+        'HOST': f'{POSTGRES_HOST}',
+        'PORT': f'{POSTGRES_PORT}',
+        "KEY_PREFIX": "drive_",  # it's my prefix for the keys
+    }
+}
+
+# DEBUG
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
 if DEBUG:
     SECURE_BROWSER_XSS_FILTER = False
@@ -101,11 +112,30 @@ if DEBUG:
     SECURE_CROSS_ORIGIN_OPENER_POLICY = None
     WHITENOISE_MAX_AGE = 0
     WHITENOISE_USE_FINDERS = False
+    # DB
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR /  "truckdriver_db.sqlite3",
+    }
+    ALLOWED_HOSTS.pop(0)
 
 # Application definition
-
 INSTALLED_APPS = [
     "daphne",
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.contrib.settings',
+    'wagtail',
+    'taggit',
+    'modelcluster',
     'rest_framework',
     'drf_spectacular',
     'corsheaders',
@@ -124,6 +154,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
     "django.middleware.security.SecurityMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -134,13 +165,11 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
 ]
 
-# '''WHITEnOISE'''
-# for a static files in production
-# https://whitenoise.readthedocs.io/en/stable/django.html
-WHITENOISE_MAX_AGE = 31536000  # static cache by 1 year
-WHITENOISE_USE_FINDERS = True
+
+
 
 ROOT_URLCONF = "project.urls"
 
@@ -165,24 +194,6 @@ TEMPLATES = [
 ASGI_APPLICATION = "project.asgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR /  f"{DATABASE_LOCAL}",
-    # },
-    "default": {
-        'ENGINE': f'{DB_ENGINE}',
-        'NAME': f'{POSTGRES_DB}',
-        'USER': f'{POSTGRES_USER}',
-        'PASSWORD': f"{POSTGRES_PASSWORD}",
-        'HOST': f'{POSTGRES_HOST}',
-        'PORT': f'{POSTGRES_PORT}',
-        "KEY_PREFIX": "drive_",  # it's my prefix for the keys
-    }
-}
 
 
 # Password validation
@@ -225,15 +236,32 @@ USE_I18N = True
 
 USE_TZ = True
 
+DATE_FORMAT = 'd.m.Y'
+DATETIME_FORMAT = 'd.m.Y H:i'
+USE_L10N = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,  "static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR,  "collectstatic/")
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
+# '''WHITENOISE'''
+# for a static files in production
+# https://whitenoise.readthedocs.io/en/stable/django.html
+WHITENOISE_MAX_AGE = 31536000  # static cache by 1 year
+WHITENOISE_USE_FINDERS = True
+WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -252,18 +280,16 @@ SESSION_COOKIE_AGE = 86400
 CORS_ORIGIN_ALLOW_ALL = True
 # Here, we allow the URL list for publicated
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",
     f"http://{APP_HOST_REMOTE}:8000",
-    "http://0.0.0.0:8000",
+    "http://127.0.0.1:8000",
 ]
 
 # https://github.com/adamchainz/django-cors-headers?tab=readme-ov-file#csrf-integration
 # https://docs.djangoproject.com/en/5.2/ref/settings/#std-setting-CSRF_TRUSTED_ORIGINS
 # This is list from private of URL
 CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:8000",
     f"http://{APP_HOST_REMOTE}:8000",
-    "http://0.0.0.0:8000",
+    "http://127.0.0.1:8000",
     ]
 # Allow the cookie in HTTP request.
 CORS_ALLOW_CREDENTIALS = True
@@ -296,17 +322,10 @@ CORS_ALLOW_HEADERS = [
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/stateless_user_authentication.html
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTStatelessUserAuthentication',
         'rest_framework.authentication.SessionAuthentication',  # This for works with sessions
         'rest_framework.authentication.TokenAuthentication',   # Options for API
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes = int(JWT_ACCESS_TOKEN_LIFETIME_MINUTES)),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=int(JWT_REFRESH_TOKEN_LIFETIME_DAYS)),
-    "SIGNING_KEY": SECRET_KEY,
 }
 
 
@@ -376,3 +395,18 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '0.1.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+
+# WAGTAIL
+
+
+# WAGTAIL
+WAGTAIL_SITE_NAME = 'FLOWS'
+# Replace the search backend
+WAGTAILSEARCH_BACKENDS = {
+ 'default': {
+   'BACKEND': 'wagtail.search.backends.elasticsearch8',
+   'INDEX': 'myapp'
+ }
+}
+WAGTAILADMIN_BASE_URL = CORS_ALLOWED_ORIGINS[0]

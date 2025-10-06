@@ -42,7 +42,7 @@ class ContentFlowsModel(InitialModel):
         max_length=100,
         null=True,
         blank=True,
-        verbose_name=_("Sum of money"),
+        verbose_name=_("Comments"),
         validators=[
             MaxLengthValidator(100),
             RegexValidator(
@@ -50,10 +50,10 @@ class ContentFlowsModel(InitialModel):
             ),
         ],
     )
-    created_at = models.DateTimeField(
+    created_at = models.DateField(
         default=datetime.now, verbose_name=_("Date of creation"), null=True, blank=True
     )
-    updated_at = models.DateTimeField(
+    updated_at = models.DateField(
         auto_now=True,
     )
 
@@ -62,5 +62,12 @@ class ContentFlowsModel(InitialModel):
         verbose_name_plural = _("Flow")
         unique_together = ["slug"]
 
+    def __str__(self):
+        return self.type_id.name
+
     def get_absolute_url(self):
         return f"/flow/{self.pk}/"
+
+    def save(self, *args, **kwargs):
+        self.slug = self.slug.lower().replace(r" ", "_").replace("-", "_")
+        super().save(*args, **kwargs)

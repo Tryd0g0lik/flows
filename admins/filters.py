@@ -2,43 +2,64 @@
 admins/filters.py
 """
 
-from django.contrib.admin import SimpleListFilter
+from wagtail.admin.filters import WagtailFilterSet
+
+from flow.models_views.categories import CategoryModel
+from flow.models_views.content_flow import ContentFlowsModel
+from flow.models_views.status import StatusModel
+from flow.models_views.subcategories import SubCategory
+from flow.models_views.types import TypeFlowModel
 
 
-class TitleFilter(SimpleListFilter):
-    title = "Заголовок начинается с:"
-    parameter_name = "title_start"
-
-    def lookups(self, request, model_admin):
-        return [
-            ("a", "A"),
-            ("b", "B"),
-            ("c", "C"),
-            ("d", "D"),
-            ("e", "E"),
-            ("f", "F"),
-            ("g", "G"),
-            ("h", "H"),
-            ("i", "I"),
-            ("j", "J"),
-            ("k", "K"),
-            ("l", "L"),
-            ("m", "M"),
-            ("n", "N"),
-            ("o", "O"),
-            ("p", "P"),
-            ("q", "Q"),
-            ("r", "R"),
-            ("s", "S"),
-            ("t", "T"),
-            ("v", "V"),
-            ("w", "W"),
-            ("x", "X"),
-            ("y", "Y"),
-            ("z", "Z"),
+# FLOW
+class FlowFilterSet(WagtailFilterSet):
+    class Meta:
+        model = ContentFlowsModel
+        fields = [
+            "id",
+            "type_id",
+            "status_id",
+            "money",
+            "created_at",
+            "updated_at",
         ]
 
-    def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(name__icontains=self.value())
-        return queryset
+
+# STATUS
+class StatusFilterSet(WagtailFilterSet):
+    class Meta:
+        model = StatusModel
+        fields = [
+            "id",
+            "name",
+        ]
+
+
+# SUBСATEGORY
+class СategoryFilterSet(WagtailFilterSet):
+    class Meta:
+        model = CategoryModel
+        fields = ["id", "name", "subcategories"]
+
+
+# CATEGORY
+class SubСategoryFilterSet(WagtailFilterSet):
+    class Meta:
+        model = SubCategory
+        fields = [
+            "id",
+            "name",
+        ]
+
+
+# TYPE
+class TypeFilterSet(WagtailFilterSet):
+    class Meta:
+        model = TypeFlowModel
+        fields = [
+            "id",
+            "name",
+        ]
+
+
+#

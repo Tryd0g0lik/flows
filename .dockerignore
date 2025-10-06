@@ -5,7 +5,7 @@ log_*.log
 poetry.lock
 pytest.ini
 .pylintrc
-DOckerfile
+Dockerfile
 nginx
 *.md
 .editorconfig
@@ -14,3 +14,4 @@ nginx
 /__tests__
 *-dependencies.txt
 *.sqlite3
+img
