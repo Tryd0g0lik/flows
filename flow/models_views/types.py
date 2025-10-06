@@ -30,6 +30,7 @@ class TypeFlowModel(InitialModel):
         CategoryModel,
         on_delete=models.CASCADE,
         verbose_name=_("Category"),
+        unique=True,
     )
 
     class Meta:

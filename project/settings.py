@@ -80,13 +80,28 @@ if not SECRET_KEY:
     raise ValueError("SECRET_KEY must be set in environment variables")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     f'{APP_HOST_REMOTE}',
     '127.0.0.1',
 ]
 
+# DATABASE
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+DATABASES = {
+    "default": {
+        'ENGINE': f'{DB_ENGINE}',
+        'NAME': f'{POSTGRES_DB}',
+        'USER': f'{POSTGRES_USER}',
+        'PASSWORD': f"{POSTGRES_PASSWORD}",
+        'HOST': f'{POSTGRES_HOST}',
+        'PORT': f'{POSTGRES_PORT}',
+        "KEY_PREFIX": "drive_",  # it's my prefix for the keys
+    }
+}
+
+# DEBUG
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
 if DEBUG:
     SECURE_BROWSER_XSS_FILTER = False
@@ -97,9 +112,14 @@ if DEBUG:
     SECURE_CROSS_ORIGIN_OPENER_POLICY = None
     WHITENOISE_MAX_AGE = 0
     WHITENOISE_USE_FINDERS = False
+    # DB
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR /  "truckdriver_db.sqlite3",
+    }
+    ALLOWED_HOSTS.pop(0)
 
 # Application definition
-
 INSTALLED_APPS = [
     "daphne",
     'wagtail.contrib.forms',
@@ -147,22 +167,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 
 ]
-# WAGTAIL
-WAGTAIL_SITE_NAME = 'FLOWS'
-# Replace the search backend
-WAGTAILSEARCH_BACKENDS = {
- 'default': {
-   'BACKEND': 'wagtail.search.backends.elasticsearch8',
-   'INDEX': 'myapp'
- }
-}
 
-# '''WHITEnOISE'''
-# for a static files in production
-# https://whitenoise.readthedocs.io/en/stable/django.html
-WHITENOISE_MAX_AGE = 31536000  # static cache by 1 year
-WHITENOISE_USE_FINDERS = True
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+
+
 
 ROOT_URLCONF = "project.urls"
 
@@ -187,24 +194,6 @@ TEMPLATES = [
 ASGI_APPLICATION = "project.asgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR /  "truckdriver_db.sqlite3",
-    # },
-    "default": {
-        'ENGINE': f'{DB_ENGINE}',
-        'NAME': f'{POSTGRES_DB}',
-        'USER': f'{POSTGRES_USER}',
-        'PASSWORD': f"{POSTGRES_PASSWORD}",
-        'HOST': f'{POSTGRES_HOST}',
-        'PORT': f'{POSTGRES_PORT}',
-        "KEY_PREFIX": "drive_",  # it's my prefix for the keys
-    }
-}
 
 
 # Password validation
@@ -399,3 +388,23 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '0.1.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+
+# WAGTAIL
+# '''WHITENOISE'''
+# for a static files in production
+# https://whitenoise.readthedocs.io/en/stable/django.html
+WHITENOISE_MAX_AGE = 31536000  # static cache by 1 year
+WHITENOISE_USE_FINDERS = True
+WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+
+# Wagtail
+WAGTAIL_SITE_NAME = 'FLOWS'
+# Replace the search backend
+WAGTAILSEARCH_BACKENDS = {
+ 'default': {
+   'BACKEND': 'wagtail.search.backends.elasticsearch8',
+   'INDEX': 'myapp'
+ }
+}
+WAGTAILADMIN_BASE_URL = CORS_ALLOWED_ORIGINS[0]
