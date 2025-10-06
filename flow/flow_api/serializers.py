@@ -1,3 +1,6 @@
+"""
+flow/flow_api/serializers.py
+"""
 from adrf import serializers
 
 from flow.models_views.categories import CategoryModel
