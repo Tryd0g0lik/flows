@@ -1,3 +1,4 @@
+[frontend](https://github.com/Tryd0g0lik/flows_fronted)
 
 # APP
 - Статус "`flow/models_views/status.py`"; 
