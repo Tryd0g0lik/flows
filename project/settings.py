@@ -80,7 +80,7 @@ if not SECRET_KEY:
     raise ValueError("SECRET_KEY must be set in environment variables")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     f'{APP_HOST_REMOTE}',
@@ -239,6 +239,7 @@ USE_TZ = True
 DATE_FORMAT = 'd.m.Y'
 DATETIME_FORMAT = 'd.m.Y H:i'
 USE_L10N = False
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATICFILES_FINDERS = [
@@ -252,6 +253,12 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR,  "collectstatic/")
 STATIC_URL = 'static/'
 
+# '''WHITENOISE'''
+# for a static files in production
+# https://whitenoise.readthedocs.io/en/stable/django.html
+WHITENOISE_MAX_AGE = 31536000  # static cache by 1 year
+WHITENOISE_USE_FINDERS = True
+WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -391,14 +398,9 @@ SPECTACULAR_SETTINGS = {
 
 
 # WAGTAIL
-# '''WHITENOISE'''
-# for a static files in production
-# https://whitenoise.readthedocs.io/en/stable/django.html
-WHITENOISE_MAX_AGE = 31536000  # static cache by 1 year
-WHITENOISE_USE_FINDERS = True
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
 
-# Wagtail
+
+# WAGTAIL
 WAGTAIL_SITE_NAME = 'FLOWS'
 # Replace the search backend
 WAGTAILSEARCH_BACKENDS = {
