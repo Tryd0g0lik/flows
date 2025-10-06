@@ -1,3 +1,8 @@
+За 5 дней реалиховать полный ТЗ - нет возможности. \
+Все условия ТЗ реализованы на стороне панели администратора.
+
+Если представленное в двух репозиториях реализовано не по плану, это лишь вопрос отсутствия согласования вопросов и весьма короткий сроки на реализайию.
+
 [frontend](https://github.com/Tryd0g0lik/flows_fronted)
 
 # APP
@@ -19,9 +24,9 @@
 ## Commands
 
 ```
-py manage.py collectstatic
 py manage.py makemigrations
 py manage.py migrate
+py manage.py collectstatic
 py manage.py runserver
 daphne project.asgi:application # mode: develop & poduction 
 git log --all --oneline --graph --decorate --date=format:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(yellow)%h%C(auto)%d %C(white)%cd%Creset %s' # история развития проекта
@@ -33,6 +38,43 @@ git log --all --oneline --graph --decorate --date=format:'%Y-%m-%d %H:%M:%S' --p
 - "`makemigrations`" создать файлы миграции в db;
 - "`migrate`" - изменить структуру базы данных;
 - "`runserver`" - запускаем локальный сервер "`daphne`" для разработки.   
+
+### *.sh файл для сервера
+```sh
+#!/bin/bash
+cd /home/denis/flows || exit 1
+git pull --ff-only origin cicd  || exit 1
+# sudo docker compose down || exit 1
+if [ "$(sudo docker ps -aq)" ]; then
+    echo "Found running FLOW, stopping them..."
+    sudo docker compose down || exit 1
+    sudo docker builder prune -af  || exit 1
+else
+    echo "No running FLOW found"
+fi
+
+# sudo docker rmi $(sudo docker images -q) || exit 1
+if [ "$(sudo docker images -q)" ]; then
+    echo "Found docker images, removing them..."
+    sudo docker rmi $(sudo docker images -q) || exit 1
+else
+    echo "No docker images found"
+fi
+
+
+#sudo docker compose -f ./docker-compose.yml build --no-cache
+sudo docker compose -f ./docker-compose.yml up -d
+
+echo "Deployment completed successfully"
+```
+```exp
+#!/usr/bin/expect -f
+set timeout 600
+spawn /home/< user_your_server >/flows/pull.sh
+expect "password"
+send "< pasword_your_server >\r"
+expect eof
+```
 
 ----
 ## URL локальный
@@ -89,6 +131,9 @@ git log --all --oneline --graph --decorate --date=format:'%Y-%m-%d %H:%M:%S' --p
 
 ### Админ-панель
 ![db_panel](./img/new_db.png)
+
+### Админ-панель Записи
+![flow](./img/flow_new2.png)
 
 ### Админ-панель Категория
 ![category_new](./img/category_new.png)
@@ -203,4 +248,57 @@ DATABASE_LOCAL=truckdriver_db.sqlite3
 | "`daphne`"           |         "`channels`"            |     "`djangorestframework`"            |
 | [swagger](./swagger) | [nginx](./nginx/default.conf) |[docker-compose](./docker-compose.yml)   |
 | "`asincio`"              | "`adrf`" | "`psycopg2`"|
+
+<details closed>
+<summary>Реализовано в админ-панели</summary>
+
+1. Создание записи о движении денежных средств (ДДС):
+- Поля:
+  - ■ Дата создания записи — заполняется автоматически, но может
+  быть изменена вручную. Пример записи — 01.01.2025
+  - ■ Статус — имеет строковые значения. Данный список имеет возможность расширяться.
+  - ■ Тип — имеет строковые значения. Данный список имеет возможность расширяться.
+  - ■ Категория и подкатегория — строковые значений. Категория и привязанные к ней подкатегории.Каждый из списоков может расширяться.
+  - ■ Сумма — позитивное число:
+  - ■ Комментарий — строковое или пустое значение. 
+
+2. В панели администратора -просмотр списка всех записей:
+   - ○ Вывод таблицы с данными: дата, статус, тип, категория, подкатегория, сумма, комментарий.
+   - ○ Поддержка фильтрации по дате (с указанием даты создания), статусу, типу, категории и подкатегории.
+3. Редактирование записи:
+   - Возможность изменить любую запись и любую составляющию записи.
+4. Удаление записи:
+   - ○ Возможность удалить любую запись.
+5. Управление справочниками:
+   - ○ Добавление, редактирование и удаление статусов, типов, категорий и подкатегорий.
+6. Логические зависимости:
+   - ○ Подкатегории привязаны к категориям.
+7. ● Бизнес-правила:
+   - ○ Пользователь не может выбрать подкатегорию, если она не связана к выбранной категории.
+
+### Note, в связи с отсутвием возможности соглосовать вопросы
+>> Пользователь не может выбрать категорию, если она не относится к выбранному типу.
+
+Вот тут не понял. "`категорию`" - озвучено в ЕДИНСТВЕННОМ числе.\
+То есть. Для записи - ТИП является уникальным, так же как для типа - уникальным является категория?\
+По каким принципам выводит ТИП&КАТЕГОРИЮ в UI?
+
+Ответы на вопросы не доступны и на момент прочтения, ТИП имеет возможность выбора (одной категории) на этапе создания (и/или редактирования записи - фронт).\
+Выбранная категория может быть выбранной и другоими типами.  
+----
+>> ○ Чистота и структура кода.
+
+Являются комментарии в теле функций & методов грязным кодом или чистым - остаётся не известным. Но, ТЗ требует:
+>> Наличие адекватных комментариев и документации.
+----
+>> Валидация данных:
+
+Проект построен по принципу, что:
+- сервер ни чего не знает про фронт;
+- фолнт ни чего не знает про сервер.
+
+Валидация данных присутствует как в моделях базы данных, так и на стороне фронта.
+
+</details>
+
 
